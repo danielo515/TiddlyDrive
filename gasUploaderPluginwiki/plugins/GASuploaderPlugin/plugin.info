@@ -1,0 +1,7 @@
+{
+	"title": "$:/plugins/danielo515/GASuploader",
+	"description": "Skeleton Plugin for TiddlyWiki",
+	"author": "Danielo Rodriguez",
+	"core-version": ">=5.1.0",
+	"list": "readme"
+}
