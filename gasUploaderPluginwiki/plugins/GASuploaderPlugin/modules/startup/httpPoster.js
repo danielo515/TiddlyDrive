@@ -18,10 +18,10 @@ exports.after = ["startup"];
 exports.synchronous = true;
 
 
-//$tw.GAS_Http_Handler = new $tw.utils.GAS_Http_Handler($tw.wiki);
 exports.startup = function() {
+	$tw.GAS_Http_Handler = new $tw.utils.GAS_Http_Handler($tw.wiki);
 	$tw.rootWidget.addEventListener("pm-GAS-http-upload",function(event) {
-//		$tw.GAS_Http_Handler.postTiddler(event.param);
+		$tw.GAS_Http_Handler.postTiddler(event.param);
 	});
 };
 
