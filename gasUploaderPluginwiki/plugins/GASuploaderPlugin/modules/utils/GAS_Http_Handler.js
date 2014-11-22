@@ -29,14 +29,25 @@ GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
 		url: this.getURL("addTiddler"),
 		type: "POST",
 		data: jsonTiddler,
-		callback: function(err,data){
-			if(err) {
-				return self.logger.log("Something went wrong while Posting",err);
-			}else{
-				self.logger.log("SUCCESS! ",data);
-			}
-		}
+		callback: postTiddlerCallback
 	});
+
+function postTiddlerCallback(err,data){
+	if(err) {
+	 self.logger.log("Something went wrong while Posting"+err);
+	}else{
+		self.logger.log("SUCCESS!");
+		self.logger.log(data);
+		var response = JSON.parse(data).response;
+		self.logger.log("Saving new tiddler id: ",response.id)
+		if(response.id){
+			var tiddler = JSON.parse(jsonTiddler);
+			$tw.wiki.addTiddler(new $tw.Tiddler(tiddler,{"gas_id":response.id}));
+		}
+	}
+};	
+
+
 };
 
 
