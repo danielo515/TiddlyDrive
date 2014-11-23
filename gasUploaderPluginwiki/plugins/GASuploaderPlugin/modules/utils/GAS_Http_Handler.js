@@ -32,9 +32,11 @@ GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
 		callback: postTiddlerCallback
 	});
 
+	$tw.notifier.display("$:/plugins/danielo515/GASuploader/language/Notifications/Save/Tiddler");
+
 function postTiddlerCallback(err,data){
 	if(err) {
-	 self.logger.log("Something went wrong while Posting"+err);
+	 self.logger.log("Something went wrong while Posting ",err);
 	}else{
 		self.logger.log("SUCCESS!");
 		self.logger.log(data);
@@ -47,8 +49,14 @@ function postTiddlerCallback(err,data){
 	}
 };	
 
-
 };
+
+GAS_Http_Handler.prototype.getTiddler = function(tiddlerTitle){
+	var tiddler = this.wiki.getTiddler(tiddlerTitle);
+
+
+self.logger.log("The requested tiddler does not have a valid gas_id")
+}
 
 
 GAS_Http_Handler.prototype.getURL = function (action){
