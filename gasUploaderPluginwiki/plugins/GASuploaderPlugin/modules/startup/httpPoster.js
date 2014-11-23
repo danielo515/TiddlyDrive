@@ -23,6 +23,9 @@ exports.startup = function() {
 	$tw.rootWidget.addEventListener("pm-GAS-http-upload",function(event) {
 		$tw.GAS_Http_Handler.postTiddler(event.param);
 	});
+		$tw.rootWidget.addEventListener("pm-GAS-POST-Tiddlers",function(event) {
+		$tw.GAS_Http_Handler.postTiddlers(event.param);
+	});
 	$tw.rootWidget.addEventListener("pm-GAS-GET-TiddlerByTitle",function(event) {
 		$tw.GAS_Http_Handler.getTiddlerbyTitle(event.param);
 	});
