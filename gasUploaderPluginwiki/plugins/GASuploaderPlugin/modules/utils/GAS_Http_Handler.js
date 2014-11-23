@@ -77,7 +77,7 @@ GAS_Http_Handler.prototype.setTiddlerID=function(tiddlerTitle,gas_id){
 
 GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
 
-	this.postTiddlers(["[title[",tiddlerName"]]"].join(""));
+	this.postTiddlers(["[title[",tiddlerName,"]]"].join(""));
 
 };
 
