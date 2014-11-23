@@ -27,6 +27,11 @@ GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
 	var tiddlersList=$tw.wiki.filterTiddlers(tiddlersFilter),self=this,
 	tiddlersCollection=[];
 	
+	if(tiddlersList.length === 0){
+		this.displayNotification("Error","empty tiddlers list"," ");
+		this.removeProcessingState();
+	}
+
 	tiddlersList.forEach(function(title){
 		tiddlersCollection.push($tw.wiki.getTiddler(title).fields);
 	});
@@ -34,7 +39,7 @@ GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
 	var postData = JSON.stringify(tiddlersCollection);
 	self.logger.log("PostData: ",postData);
 
-	this.tiddlerBeingProcessed=tiddlersList.length+" tiddlers";
+	this.tiddlerBeingProcessed=tiddlersList.length === 1 ? tiddlersList[0] : tiddlersList.length+" tiddlers";
 	this.setProcessingState("upload");
 
 	$tw.utils.httpRequest({
@@ -58,6 +63,8 @@ GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
 				self.setUploadedState();
 			}
 		}
+
+		self.removeProcessingState();
 	}
 
 };
@@ -69,37 +76,8 @@ GAS_Http_Handler.prototype.setTiddlerID=function(tiddlerTitle,gas_id){
 }
 
 GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
-	var jsonTiddler = $tw.wiki.getTiddlerAsJson(tiddlerName),
-	self = this;
 
-	this.tiddlerBeingProcessed = tiddlerName;
-
-	this.setProcessingState("upload");
-	
-	$tw.utils.httpRequest({
-		url: this.getURL("addTiddler"),
-		type: "POST",
-		data: jsonTiddler,
-		callback: postTiddlerCallback
-	});
-
-function postTiddlerCallback(err,data){
-	if(err) {
-	 self.logger.log("Something went wrong while Posting ",err);
-	}else{
-		self.logger.log("SUCCESS!");
-		self.logger.log(data);
-		var response = JSON.parse(data).response;
-		self.logger.log("Saving new tiddler id: ",response.id)
-		if(response.id){
-			var tiddler = JSON.parse(jsonTiddler);
-			$tw.wiki.addTiddler(new $tw.Tiddler(tiddler,{"gas_id":response.id}));
-			self.setUploadedState();
-		}
-	}
-
-	self.removeProcessingState();
-};	
+	this.postTiddlers(["[title[",tiddlerName"]]"].join(""));
 
 };
 
@@ -122,11 +100,10 @@ GAS_Http_Handler.prototype.removeProcessingState = function(){
 
 GAS_Http_Handler.prototype.setState = function(stateTiddler,tiddlerBeingProcessed){
 	this.wiki.addTiddler( new $tw.Tiddler({"title":stateTiddler,"text":tiddlerBeingProcessed}));
-	
 };
 
-GAS_Http_Handler.prototype.displayNotification = function(action,text){
-	var message = ["Starting to",action,text].join(" "),
+GAS_Http_Handler.prototype.displayNotification = function(action,text,prefix){
+	var message = [prefix || "Starting to",action,text].join(" "),
 	notificationTiddler="$:/state/GAS/Processing";
 	this.wiki.addTiddler( new $tw.Tiddler({"title":notificationTiddler,"text":message}));
 	$tw.notifier.display(notificationTiddler);
