@@ -25,9 +25,9 @@ GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
 	var jsonTiddler = $tw.wiki.getTiddlerAsJson(tiddlerName),
 	self = this;
 
-	this.uploadingTiddler = tiddlerName;
+	this.tiddlerBeingProcessed = tiddlerName;
 
-	this.setUploadingState();
+	this.setProcessingState();
 	
 	$tw.utils.httpRequest({
 		url: this.getURL("addTiddler"),
@@ -51,16 +51,15 @@ function postTiddlerCallback(err,data){
 		}
 	}
 
-	self.removeUploadingState();
+	self.removeProcessingState();
 };	
 
 };
 
 
-GAS_Http_Handler.prototype.setUploadingState = function(){
-	this.logger.log("Posting tiddler ",this.uploadingTiddler);
-	this.wiki.addTiddler( new $tw.Tiddler({"title":STATE_UPLOADING,"text":this.uploadingTiddler}));
-	$tw.notifier.display("$:/plugins/danielo515/GASuploader/language/Notifications/Save/Tiddler");
+GAS_Http_Handler.prototype.setProcessingState = function(action){
+	this.logger.log("Posting tiddler ",this.tiddlerBeingProcessed);
+	this.setState(action,STATE_UPLOADING,this.tiddlerBeingProcessed);
 };
 
 GAS_Http_Handler.prototype.setUploadedState = function(){
@@ -68,14 +67,22 @@ GAS_Http_Handler.prototype.setUploadedState = function(){
 	$tw.notifier.display("$:/plugins/danielo515/GASuploader/language/Notifications/Saved/Tiddler");
 };
 
-GAS_Http_Handler.prototype.removeUploadingState = function(){
+GAS_Http_Handler.prototype.removeProcessingState = function(){
 	this.wiki.addTiddler( new $tw.Tiddler({"title":STATE_UPLOADING,"text":""}));
 	this.uploadingTiddler = "";
-}
+};
 
+GAS_Http_Handler.prototype.setState = function(action,stateTiddler,tiddlerBeingProcessed){
+	this.wiki.addTiddler( new $tw.Tiddler({"title":stateTiddler,"text":tiddlerBeingProcessed}));
+	var message = ["Starting to",action,tiddlerBeingProcessed].join(" "),
+	notificationTiddler="$:/plugins/danielo515/GASuploader/language/Notifications/Processing/Tiddler";
+	this.wiki.addTiddler( new $tw.Tiddler({"title":notificationTiddler,"text":message}));
+	$tw.notifier.display(notificationTiddler);
+};
 
 GAS_Http_Handler.prototype.getTiddler = function(query){
 	var self = this;
+	this.setProcessingState("download");
 
 	$tw.utils.httpRequest({
 		url: this.getURL("getTiddler",query),
@@ -98,19 +105,22 @@ GAS_Http_Handler.prototype.getTiddler = function(query){
 
 
 GAS_Http_Handler.prototype.getTiddlerbyID = function(tiddlerTitle){
-	var tiddler = this.wiki.getTiddler(tiddlerTitle);
+	var tiddler = this.wiki.getTiddler(tiddlerTitle),
+	self=this;
+	this.tiddlerBeingProcessed = tiddlerTitle;
 	if(tiddler){
 		var fields=tiddler.fields;
 		if(fields.gas_id){
 			this.getTiddler({"id":fields.gas_id});
 		}else{ 
-			self.logger.log("The requested tiddler does not have a valid gas_id");
+			self.logger.log("The tiddler ",tiddlerTitle," does not have a valid gas_id");
 		}
 	}
 };
 
 
 GAS_Http_Handler.prototype.getTiddlerbyTitle = function(tiddlerTitle){
+	this.tiddlerBeingProcessed = tiddlerTitle;
 	this.getTiddler({"title":tiddlerTitle});
 };
 
