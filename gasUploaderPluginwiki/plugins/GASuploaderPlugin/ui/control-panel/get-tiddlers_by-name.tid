@@ -1,0 +1,11 @@
+created: 20141123193651763
+modified: 20141123194649624
+tags: $:/tags/GAS/getTiddlers
+title: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/get-tiddlers/by-name
+type: text/vnd.tiddlywiki
+
+The button below allows you to retrieve a tiddler by its title from the server.
+
+''Tiddler title:'' <$edit-text tag="input" tiddler="$:/state/GAS/getTiddler" default="" placeholder="title"/>  <$button message="pm-GAS-GET-TiddlerByTitle" param={{$:/state/GAS/getTiddler}}>
+Get tiddler
+</$button>

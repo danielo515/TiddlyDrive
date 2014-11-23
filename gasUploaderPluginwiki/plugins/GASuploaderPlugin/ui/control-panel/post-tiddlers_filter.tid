@@ -1,0 +1,17 @@
+created: 20141123195437283
+modified: 20141123200048043
+tags: $:/tags/GAS/postTiddlers
+title: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/post-tiddlers/filter
+type: text/vnd.tiddlywiki
+
+The button below allows you upload a bunch of tiddlers
+
+''Tiddlers filter: '' <$edit-text tag="input" tiddler="$:/state/GAS/postTiddlers" default="" placeholder="title"/>  <$button message="pm-GAS-POST-Tiddlers" param={{$:/state/GAS/postTiddlers}}>
+Upload tiddlers
+</$button>
+
+<$reveal type="nomatch" state="$:/state/GAS/postTiddlers" text=""> 
+<$list filter={{$:/state/GAS/postTiddlers}}>
+
+</$list>
+</$reveal>

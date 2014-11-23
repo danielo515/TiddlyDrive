@@ -1,0 +1,10 @@
+caption: Upload
+created: 20141123195325085
+modified: 20141123195422054
+tags: $:/tags/GASPlugin
+title: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/post-tiddlers
+type: text/vnd.tiddlywiki
+
+<$list filter="[all[shadows+tiddlers]tag[$:/tags/GAS/postTiddlers]]">
+<$transclude tiddler={{!!title}} mode="block"/>
+</$list>
