@@ -1,0 +1,10 @@
+caption: Server
+created: 20141122184746272
+modified: 20141122185842296
+tags: $:/tags/GASPlugin
+title: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/server-config
+type: text/vnd.tiddlywiki
+
+<$list filter="[tag[$:/tags/GASserver-config]]">
+<$transclude tiddler={{!!title}}/>
+</$list>
