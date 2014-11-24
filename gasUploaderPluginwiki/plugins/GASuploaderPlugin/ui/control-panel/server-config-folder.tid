@@ -1,0 +1,13 @@
+created: 20141122185405867
+modified: 20141122185543802
+tags: $:/tags/GASserver-config
+title: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/server-config/subfolder
+type: text/vnd.tiddlywiki
+list-after: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/server-config/url
+
+!!Subfolder
+
+All tiddlers are saved under the same folder for security reasons. But you can specify a subfolder name and tiddlers will be uploaded to that subfolder within the main folder. Is not possible to specify subfolders within subfolders, but any string is valid as a folder name, so `folder\subfolder` will create a single folder called `folder\subfolder`.
+
+
+''folder name'': <$edit-text tiddler="$:/plugins/danielo515/GASuploader/config/subfolder" tag="input" default="" placeholder="FolderName"/>
