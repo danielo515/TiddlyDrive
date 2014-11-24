@@ -1,0 +1,10 @@
+created: 20141123124829033
+gas_id: 0B-USg0ow4LCZTUFFLWEwY2Q4NzA3LWIyMDYtNDQzNC04NWViLTI2NTU3NGRlYTBjYg
+modified: 20141123181756847
+tags: $:/tags/GAS/Uploadedmenu
+title: $:/plugins/danielo515/GASuploader/ui/Buttons/Uploaded/Menu/item/upload
+type: text/vnd.tiddlywiki
+
+<$button message="pm-GAS-http-upload" class=<<tv-config-toolbar-class>> param={{!!title}} set="$:/plugins/danielo515/GASuploader/temp/save/tiddler" setTo={{!!title}}>
+Upload this version
+</$button>

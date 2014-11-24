@@ -1,0 +1,9 @@
+created: 20141123115959399
+modified: 20141123184938478
+tags: $:/tags/GAS/Uploadedmenu
+title: $:/plugins/danielo515/GASuploader/ui/Buttons/Uploaded/Menu/item/getByTitle
+type: text/vnd.tiddlywiki
+
+<$button message="pm-GAS-GET-TiddlerByTitle" class=<<tv-config-toolbar-class>> param={{!!title}}>
+Get last server version
+</$button>

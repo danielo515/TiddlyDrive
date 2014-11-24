@@ -1,0 +1,6 @@
+created: 20141123181116017
+modified: 20141123181209366
+title: $:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploading
+type: text/vnd.tiddlywiki
+
+<$reveal type="match" state="$:/plugins/danielo515/GASuploader/temp/uploading" text={{!!title}}>{{$:/plugins/danielo515/GASuploader/ui/icons/uploading}}</$reveal>

@@ -1,0 +1,14 @@
+created: 20141121145135614
+list-before: $:/core/ui/Buttons/close
+modified: 20141123184145933
+tags: $:/tags/ViewToolbar
+title: $:/plugins/danielo515/GASuploader/ui/Buttons/upload
+type: text/vnd.tiddlywiki
+
+<$list filter="[is[current]!has[gas_id]]">
+<$reveal type="nomatch" state="$:/plugins/danielo515/GASuploader/temp/uploading" text={{!!title}}>
+<$button message="pm-GAS-http-upload" class=<<tv-config-toolbar-class>> param={{!!title}} set="$:/plugins/danielo515/GASuploader/temp/save/tiddler" setTo={{!!title}}>{{$:/plugins/danielo515/GASuploader/ui/icons/upload}}
+</$button></$reveal>
+<$button class=<<tv-config-toolbar-class>>><$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploading" mode="inline"/></$button>
+</$list>
+<$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/Upload/Menu" mode="inline"/>
