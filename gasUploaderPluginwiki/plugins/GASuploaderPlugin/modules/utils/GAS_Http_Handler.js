@@ -14,12 +14,15 @@ var widget = require("$:/core/modules/widgets/widget.js");
 var GAS_URL = "$:/plugins/danielo515/GASuploader/config/script_url";
 var STATE_UPLOADING = "$:/plugins/danielo515/GASuploader/temp/uploading",
     STATE_UPLOADED = "$:/plugins/danielo515/GASuploader/temp/uploaded",
-    GAS_SUBFOLDER ="$:/plugins/danielo515/GASuploader/config/subfolder";
+    GAS_SUBFOLDER = "$:/plugins/danielo515/GASuploader/config/subfolder";
 
 
 var GAS_Http_Handler = function(wiki) {
 	this.wiki = wiki;
 	this.logger = new $tw.utils.Logger("GAS_Http_Handler");
+	this.importer = require("$:/plugins/danielo515/GASuploader/lib/tiddlerImporter.js").GAS_importer;
+	var utils = require("$:/plugins/danielo515/GASuploader/lib/utils.js").utils;
+	this.getURL = utils["getURL"];
 };
 
 
@@ -44,7 +47,7 @@ GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
 	this.setProcessingState("upload");
 
 	$tw.utils.httpRequest({
-		url: this.getURL("addTiddlers"),
+		url: this.getURL("addTiddlers", this.getSubfolderOption()),
 		type: "POST",
 		data: postData,
 		callback: postTiddlersCallback
@@ -110,6 +113,31 @@ GAS_Http_Handler.prototype.displayNotification = function(action,text,prefix){
 	$tw.notifier.display(notificationTiddler);
 };
 
+GAS_Http_Handler.prototype.saveDownloadedTiddlers = function(tiddlerFieldsArray){
+	this.logger.log("Imporing downloaded tiddlers ");
+	this.wiki.dispatchEvent({type: "tm-import-tiddlers", param: JSON.stringify(tiddlerFieldsArray)});
+};
+
+GAS_Http_Handler.prototype.listTiddlers = function(folder){
+	var self = this;
+
+	$tw.utils.httpRequest({
+		url: this.getURL("listTiddlers",this.getSubfolderOption(folder)),
+		type: "GET",
+		callback: listTiddlersCallback
+	});
+
+	function listTiddlersCallback(err,data){
+		if(err){
+			self.logger.log("Somthig went wrong comunicating with server",err);
+		}else{
+			self.logger.log("List retrieved from server: ",data);
+			self.importer("TEST",JSON.parse(data).response);
+		}
+	}
+};
+
+
 GAS_Http_Handler.prototype.getTiddler = function(query){
 	var self = this;
 	this.setProcessingState("download");
@@ -127,7 +155,8 @@ GAS_Http_Handler.prototype.getTiddler = function(query){
 			self.logger.log("SUCCESS getting tiddler!");self.logger.log(data);
 			var response = JSON.parse(data).response;
 			if(response.tiddler){
-				$tw.wiki.addTiddler(new $tw.Tiddler(response.tiddler));
+				//$tw.wiki.addTiddler(new $tw.Tiddler(response.tiddler));
+				self.saveDownloadedTiddlers([response.tiddler]);
 			}
 		}
 	self.removeProcessingState();
@@ -155,26 +184,14 @@ GAS_Http_Handler.prototype.getTiddlerbyTitle = function(tiddlerTitle){
 	this.getTiddler({"title":tiddlerTitle});
 };
 
-
-GAS_Http_Handler.prototype.getURL = function (action,options){
-	if(action){ //action on url required
-		var url = [this.wiki.getTiddlerText(GAS_URL),"?action=",action,this.getSubfolderUrlEncoded()];
-		if(options){ //if there are options push those options into the url
-			$tw.utils.each(options,function(value,name){
-				url.push("&");url.push(name);url.push("=");url.push(value);
-			});
-		}
-			return url.join("");
-	}
-
-	return this.wiki.getTiddlerText(GAS_URL);
-};
-
-
-GAS_Http_Handler.prototype.getSubfolderUrlEncoded = function(){
-	var subfolder = this.getSubfolder();
+/* Returns the a folder name in the form required by getUrl
+   @foldername a folder name to add to the option. If not provided fallback to the
+    	wiki globaly defined */
+GAS_Http_Handler.prototype.getSubfolderOption= function(foldername){
+	this.logger.log("So you want the folder  ",foldername);
+	var subfolder = foldername || this.getSubfolder();
 	if(subfolder){
-		return ["&folder=",subfolder].join("");
+		return {"folder":subfolder};
 	}
 	
 	return undefined; //undefined is not rendered when you make a join("")

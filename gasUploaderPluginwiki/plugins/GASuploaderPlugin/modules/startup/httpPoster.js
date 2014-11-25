@@ -32,6 +32,9 @@ exports.startup = function() {
 	$tw.rootWidget.addEventListener("pm-GAS-GET-TiddlerByID",function(event) {
 		$tw.GAS_Http_Handler.getTiddlerbyID(event.param);
 	});
+	$tw.rootWidget.addEventListener("pm-GAS-ListTiddlers",function(event) {
+		$tw.GAS_Http_Handler.listTiddlers(event.param);
+	});
 };
 
 })();
