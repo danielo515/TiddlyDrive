@@ -13,7 +13,8 @@ module-type: utils
 var widget = require("$:/core/modules/widgets/widget.js");
 var GAS_URL = "$:/plugins/danielo515/GASuploader/config/script_url";
 var STATE_UPLOADING = "$:/plugins/danielo515/GASuploader/temp/uploading",
-    STATE_UPLOADED = "$:/plugins/danielo515/GASuploader/temp/uploaded"
+    STATE_UPLOADED = "$:/plugins/danielo515/GASuploader/temp/uploaded",
+    GAS_SUBFOLDER ="$:/plugins/danielo515/GASuploader/config/subfolder";
 
 
 var GAS_Http_Handler = function(wiki) {
@@ -157,7 +158,7 @@ GAS_Http_Handler.prototype.getTiddlerbyTitle = function(tiddlerTitle){
 
 GAS_Http_Handler.prototype.getURL = function (action,options){
 	if(action){ //action on url required
-		var url = [this.wiki.getTiddlerText(GAS_URL),"?action=",action];
+		var url = [this.wiki.getTiddlerText(GAS_URL),"?action=",action,this.getSubfolderUrlEncoded()];
 		if(options){ //if there are options push those options into the url
 			$tw.utils.each(options,function(value,name){
 				url.push("&");url.push(name);url.push("=");url.push(value);
@@ -167,6 +168,21 @@ GAS_Http_Handler.prototype.getURL = function (action,options){
 	}
 
 	return this.wiki.getTiddlerText(GAS_URL);
+};
+
+
+GAS_Http_Handler.prototype.getSubfolderUrlEncoded = function(){
+	var subfolder = this.getSubfolder();
+	if(subfolder){
+		return ["&folder=",subfolder].join("");
+	}
+	
+	return undefined; //undefined is not rendered when you make a join("")
+};
+
+GAS_Http_Handler.prototype.getSubfolder = function (){
+	var subfolder = this.wiki.getTiddlerText(GAS_SUBFOLDER).trim();
+	return subfolder;
 };
 
 exports.GAS_Http_Handler = GAS_Http_Handler;
