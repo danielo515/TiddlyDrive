@@ -4,11 +4,13 @@ modified: 20141123184145933
 tags: $:/tags/ViewToolbar
 title: $:/plugins/danielo515/GASuploader/ui/Buttons/upload
 type: text/vnd.tiddlywiki
+caption: {{$:/plugins/danielo515/GASuploader/ui/icons/upload}} {{$:/plugins/danielo515/GASuploader/language/Buttons/Caption/upload}}
+description: {{$:/plugins/danielo515/GASuploader/language/Buttons/Hint/upload}}
 
 <$list filter="[is[current]!has[gas_id]]">
 <$reveal type="nomatch" state="$:/plugins/danielo515/GASuploader/temp/uploading" text={{!!title}}>
-<$button message="pm-GAS-http-upload" class=<<tv-config-toolbar-class>> param={{!!title}} set="$:/plugins/danielo515/GASuploader/temp/save/tiddler" setTo={{!!title}}>{{$:/plugins/danielo515/GASuploader/ui/icons/upload}}
+<$button message="pm-GAS-http-upload" tooltip={{$:/plugins/danielo515/GASuploader/language/Buttons/Hint/upload}} aria-label={{$:/plugins/danielo515/GASuploader/language/Buttons/Caption/upload}} class=<<tv-config-toolbar-class>> param={{!!title}} set="$:/plugins/danielo515/GASuploader/temp/save/tiddler" setTo={{!!title}}>{{$:/plugins/danielo515/GASuploader/ui/icons/upload}}
 </$button></$reveal>
-<$button class=<<tv-config-toolbar-class>>><$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploading" mode="inline"/></$button>
+<$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploading" mode="inline"/>
 </$list>
 <$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/Upload/Menu" mode="inline"/>

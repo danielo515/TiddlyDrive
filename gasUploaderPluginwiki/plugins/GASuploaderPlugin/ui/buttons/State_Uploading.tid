@@ -3,4 +3,4 @@ modified: 20141123181209366
 title: $:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploading
 type: text/vnd.tiddlywiki
 
-<$reveal type="match" state="$:/plugins/danielo515/GASuploader/temp/uploading" text={{!!title}}>{{$:/plugins/danielo515/GASuploader/ui/icons/uploading}}</$reveal>
+<$reveal type="match" state="$:/plugins/danielo515/GASuploader/temp/uploading" text={{!!title}}><$button class=<<tv-config-toolbar-class>>>{{$:/plugins/danielo515/GASuploader/ui/icons/uploading}}</$button></$reveal>
