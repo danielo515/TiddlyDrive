@@ -1,0 +1,21 @@
+title: $:/plugins/danielo515/GASuploader/ui/styles/ui.css
+type: text/plain
+tags: $:/tags/Stylesheet
+
+.server-list-table th{ position: relative;}
+
+.server-list-table td {
+    /* css-3 */
+    white-space: -o-pre-wrap; 
+    word-wrap: break-word;
+    white-space: pre-wrap; 
+    white-space: -moz-pre-wrap; 
+    white-space: -pre-wrap; 
+}
+
+.server-list-table col:nth-child(1){width:100px;}
+
+.server-list-table { 
+  table-layout: fixed;
+  width: 100%
+}
