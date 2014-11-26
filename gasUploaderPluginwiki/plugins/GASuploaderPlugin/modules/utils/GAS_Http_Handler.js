@@ -77,9 +77,9 @@ GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
 
 GAS_Http_Handler.prototype.updateTiddler=function(tiddlerTitle,newFields){
 	var fields = $tw.wiki.getTiddler(tiddlerTitle).fields;
-	$tw.wiki.addTiddler(new $tw.Tiddler(fields,{"gas_id":newFields.gas_id, "gas_permalink": newFields.permalink}));
-	this.logger.log("Updated ",tiddlerTitle," with id: ",newFields.gas_id);
-}
+	$tw.wiki.addTiddler(new $tw.Tiddler(fields,{"gas_id":newFields.id,"gas_uploaded": new Date()}));
+	this.logger.log("Updated ",tiddlerTitle," with id: ",newFields.id);
+};
 
 GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
 
