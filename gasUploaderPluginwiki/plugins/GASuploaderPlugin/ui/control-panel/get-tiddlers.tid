@@ -2,7 +2,7 @@ caption: Get tiddlers
 created: 20141123193447405
 modified: 20141123194627903
 tags: $:/tags/GASPlugin
-title: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/get-tiddlers
+title: $:/plugins/danielo515/GASuploader/ui/control-panel/get-tiddlers
 type: text/vnd.tiddlywiki
 
 <$list filter="[all[shadows+tiddlers]tag[$:/tags/GAS/getTiddlers]]">

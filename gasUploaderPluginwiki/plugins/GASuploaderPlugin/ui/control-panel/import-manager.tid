@@ -5,5 +5,5 @@ tags: $:/tags/GAS/config
 !!Import options
 What to do with ''incoming'' tiddlers?: 
 
-<$radio tiddler="$:/plugins/danielo515/GASuploader/config/useImporter" value="yes">Raise the import manager</$radio>  
-<$radio tiddler="$:/plugins/danielo515/GASuploader/config/useImporter" value="no">Save them silently</$radio>
+<$radio tiddler="$:/plugins/danielo515/GASuploader/config/useImporter" value="yes"> Raise the import manager</$radio> 
+   <$radio tiddler="$:/plugins/danielo515/GASuploader/config/useImporter" value="no"> Save them silently</$radio>
