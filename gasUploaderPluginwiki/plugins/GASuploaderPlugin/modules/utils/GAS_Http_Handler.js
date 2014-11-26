@@ -166,8 +166,8 @@ GAS_Http_Handler.prototype.getTiddlers = function(descriptionsArray){
 
 
 GAS_Http_Handler.prototype.getTiddlerbyID = function(tiddlerTitle){
-	// try to get the tiddler from tiddler store, if not fallback to the list of available tiddlers on server
-	var tiddler = this.wiki.getTiddler(tiddlerTitle) || this.wiki.getSubTiddler(config.server_list,tiddlerTitle),
+	// try to get the tiddler from  the list of available tiddlers on server , if not fallback to tiddler store
+	var tiddler = this.wiki.getSubTiddler(config.server_list,tiddlerTitle) || this.wiki.getTiddler(tiddlerTitle),
 	self=this;
 	this.tiddlerBeingProcessed = tiddlerTitle;
 	if(tiddler){
