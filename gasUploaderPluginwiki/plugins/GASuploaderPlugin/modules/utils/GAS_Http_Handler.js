@@ -114,13 +114,10 @@ GAS_Http_Handler.prototype.displayNotification = function(action,text,prefix){
 	$tw.notifier.display(notificationTiddler);
 };
 
-GAS_Http_Handler.prototype.saveDownloadedTiddlers = function(tiddlerFieldsArray){
-	this.logger.log("Imporing downloaded tiddlers ");
-	this.wiki.dispatchEvent({type: "tm-import-tiddlers", param: JSON.stringify(tiddlerFieldsArray)});
-};
-
 GAS_Http_Handler.prototype.listTiddlers = function(folder){
 	var self = this;
+
+	this.displayNotification("list folder",folder);
 
 	$tw.utils.httpRequest({
 		url: this.getURL("listTiddlers",this.getSubfolderOption(folder)),
@@ -130,10 +127,12 @@ GAS_Http_Handler.prototype.listTiddlers = function(folder){
 
 	function listTiddlersCallback(err,data){
 		if(err){
-			self.logger.log("Somethig went wrong comunicating with server",err);
+			self.logger.log(config.server_communication_error,err);
+			this.displayNotification(config.server_communication_error,err,"");
 		}else{
 			self.logger.log("List retrieved from server: ",data);
-			self.importer(config.server_list,JSON.parse(data).response);
+			self.importer(config.server_list,JSON.parse(data).response,true);
+			self.displayNotification(config.folder_listed,folder,"");
 		}
 	}
 };
@@ -157,7 +156,7 @@ GAS_Http_Handler.prototype.getTiddlers = function(descriptionsArray){
 			self.logger.log("Got response from server!");self.logger.log(data);
 			var response = JSON.parse(data).response;
 			if(response){
-				self.importer(config.tiddlers_to_import,response);
+				self.importer(config.import_tiddler,response,config.import_manager());
 			}
 		}
 	self.removeProcessingState();
@@ -197,7 +196,7 @@ GAS_Http_Handler.prototype.getSubfolderOption= function(foldername){
 		return {"folder":subfolder};
 	}
 	
-	return undefined; //undefined is not rendered when you make a join("")
+	return undefined; //undefined is processed as option
 };
 
 GAS_Http_Handler.prototype.getSubfolder = function (){

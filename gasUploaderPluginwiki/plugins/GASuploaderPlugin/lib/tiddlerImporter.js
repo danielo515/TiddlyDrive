@@ -7,17 +7,18 @@ module-type: library
 
 \*/
 
-exports.GAS_importer  = function(IMPORT_TITLE,tiddlers)
-	{
-
-
+exports.GAS_importer  = function(IMPORT_TITLE,tiddlers,raise_importer)
+{
+	
+if(raise_importer){
 	// Get the current $:/Import tiddler
 	var importTiddler = $tw.wiki.getTiddler(IMPORT_TITLE),
 		importData = $tw.wiki.getTiddlerData(IMPORT_TITLE,{}),
 		newFields = new Object({
 			title: IMPORT_TITLE,
 			type: "application/json",
-			"multitid-type": "vault"
+		/*	"multitid-type": "vault",*/
+			"plugin-type": "import"
 		}),
 		incomingTiddlers = [];
 	// Process each tiddler
@@ -35,6 +36,10 @@ exports.GAS_importer  = function(IMPORT_TITLE,tiddlers)
 	newFields.text = JSON.stringify(importData,null,$tw.config.preferences.jsonSpaces);
 	$tw.wiki.addTiddler(new $tw.Tiddler(importTiddler,newFields));
 	// Update the story and history details
-
+} else {
+	tiddlers.forEach(function(fields){
+		$tw.wiki.addTiddler(new $tw.Tiddler(fields))
+	});
+}
 	return "saved";
 };
