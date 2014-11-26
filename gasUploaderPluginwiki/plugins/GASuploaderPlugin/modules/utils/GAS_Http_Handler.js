@@ -11,10 +11,10 @@ module-type: utils
 "use strict";
 
 var widget = require("$:/core/modules/widgets/widget.js");
-var GAS_URL = "$:/plugins/danielo515/GASuploader/config/script_url";
 var STATE_UPLOADING = "$:/plugins/danielo515/GASuploader/temp/uploading",
     STATE_UPLOADED = "$:/plugins/danielo515/GASuploader/temp/uploaded",
-    GAS_SUBFOLDER = "$:/plugins/danielo515/GASuploader/config/subfolder";
+    GAS_SUBFOLDER = "$:/plugins/danielo515/GASuploader/config/subfolder",
+    config;
 
 
 var GAS_Http_Handler = function(wiki) {
@@ -23,6 +23,7 @@ var GAS_Http_Handler = function(wiki) {
 	this.importer = require("$:/plugins/danielo515/GASuploader/lib/tiddlerImporter.js").GAS_importer;
 	var utils = require("$:/plugins/danielo515/GASuploader/lib/utils.js").utils;
 	this.getURL = utils["getURL"];
+	config = utils.config;
 };
 
 
@@ -129,34 +130,34 @@ GAS_Http_Handler.prototype.listTiddlers = function(folder){
 
 	function listTiddlersCallback(err,data){
 		if(err){
-			self.logger.log("Somthig went wrong comunicating with server",err);
+			self.logger.log("Somethig went wrong comunicating with server",err);
 		}else{
 			self.logger.log("List retrieved from server: ",data);
-			self.importer("TEST",JSON.parse(data).response);
+			self.importer(config.server_list,JSON.parse(data).response);
 		}
 	}
 };
 
 
-GAS_Http_Handler.prototype.getTiddler = function(query){
+GAS_Http_Handler.prototype.getTiddlers = function(descriptionsArray){
 	var self = this;
 	this.setProcessingState("download");
 
 	$tw.utils.httpRequest({
-		url: this.getURL("getTiddler",query),
-		type: "GET",
-		callback: getTiddlerCallback
+		url: this.getURL("getTiddlers"),
+		type: "POST",
+		callback: getTiddlersCallback,
+		data: JSON.stringify(descriptionsArray)
 	});
 
-	function getTiddlerCallback(err,data){
+	function getTiddlersCallback(err,data){
 		if(err) {
 		 self.logger.log("Something went wrong while gettingTiddler ",err);
 		}else{
-			self.logger.log("SUCCESS getting tiddler!");self.logger.log(data);
+			self.logger.log("Got response from server!");self.logger.log(data);
 			var response = JSON.parse(data).response;
-			if(response.tiddler){
-				//$tw.wiki.addTiddler(new $tw.Tiddler(response.tiddler));
-				self.saveDownloadedTiddlers([response.tiddler]);
+			if(response){
+				self.importer(config.tiddlers_to_import,response);
 			}
 		}
 	self.removeProcessingState();
@@ -165,23 +166,25 @@ GAS_Http_Handler.prototype.getTiddler = function(query){
 
 
 GAS_Http_Handler.prototype.getTiddlerbyID = function(tiddlerTitle){
-	var tiddler = this.wiki.getTiddler(tiddlerTitle),
+	// try to get the tiddler from tiddler store, if not fallback to the list of available tiddlers on server
+	var tiddler = this.wiki.getTiddler(tiddlerTitle) || this.wiki.getSubTiddler(config.server_list,tiddlerTitle),
 	self=this;
 	this.tiddlerBeingProcessed = tiddlerTitle;
 	if(tiddler){
-		var fields=tiddler.fields;
-		if(fields.gas_id){
-			this.getTiddler({"id":fields.gas_id});
+		var fields=tiddler.fields,
+			id=fields.gas_id || fields.id; //id cames from server, gas_id from tiddler. Should be changed?
+		if(id){
+			this.getTiddlers([{"id":id}]); //single item array case
 		}else{ 
 			self.logger.log("The tiddler ",tiddlerTitle," does not have a valid gas_id");
 		}
-	}
+	}else { self.logger.log("No information found for ",tiddlerTitle," in any of the stores");}
 };
 
 
 GAS_Http_Handler.prototype.getTiddlerbyTitle = function(tiddlerTitle){
 	this.tiddlerBeingProcessed = tiddlerTitle;
-	this.getTiddler({"title":tiddlerTitle});
+	this.getTiddlers([{"title":tiddlerTitle}]);//single item array case
 };
 
 /* Returns the a folder name in the form required by getUrl

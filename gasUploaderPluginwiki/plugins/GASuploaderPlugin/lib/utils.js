@@ -9,6 +9,10 @@ Helper function useful for plugin global scope
 
 function utils(){
 var GAS_URL = "$:/plugins/danielo515/GASuploader/config/script_url";
+var configs = {
+	server_list: "$:/temp/GAS/list_from_server",
+	tiddlers_to_import: "$:/Import"
+};
 /* @action the instruction to send to the server
    @options hasmap of options in the form of { name:value }*/
 var getURL = function (action,options){
@@ -25,7 +29,7 @@ var getURL = function (action,options){
 	return $tw.wiki.getTiddlerText(GAS_URL);
 };
 
-return { "getURL": getURL};
+return { "getURL": getURL, "config":configs};
 
 };
 
