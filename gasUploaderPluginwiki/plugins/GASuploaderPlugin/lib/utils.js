@@ -11,7 +11,9 @@ function utils(){
 var GAS_URL = "$:/plugins/danielo515/GASuploader/config/script_url";
 var configs = {
 	server_list: "$:/temp/GAS/list_from_server",
-	tiddlers_to_import: "$:/Import"
+	import_tiddler: "$:/Import",
+	server_communication_error: "Something went wrong communicating with the server",
+	folder_listed: "Succesfully list folder"
 };
 /* @action the instruction to send to the server
    @options hasmap of options in the form of { name:value }*/
@@ -27,6 +29,12 @@ var getURL = function (action,options){
 	}
 
 	return $tw.wiki.getTiddlerText(GAS_URL);
+};
+
+
+configs.import_manager = function (){
+	var use_importer = $tw.wiki.getTiddlerText("$:/plugins/danielo515/GASuploader/config/useImporter");
+	return use_importer ? use_importer.toLowerCase() === "yes" : false;
 };
 
 return { "getURL": getURL, "config":configs};
