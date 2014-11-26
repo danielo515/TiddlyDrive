@@ -1,0 +1,16 @@
+created: 20141123121333728
+modified: 20141123184155864
+title: $:/plugins/danielo515/GASuploader/ui/Buttons/Menu/get-list
+type: text/vnd.tiddlywiki
+
+<$button class=<<tv-config-toolbar-class>> popup=<<qualify "$:/state/GASuploader/temp/get-list">> >
+<$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploaded" mode="inline"/>
+<$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploading" mode="inline"/></$button>
+
+<$reveal state=<<qualify "$:/state/GASuploader/temp/get-list">> type="popup" position="below" animate="yes">
+<div class="tc-drop-down">
+<$list filter="[all[shadows+tiddlers]tag<tag-menu-server-list>]" variable="menuitem">
+<$transclude tiddler=<<menuitem>> mode="inline"/>
+</$list>
+</div>
+</$reveal>

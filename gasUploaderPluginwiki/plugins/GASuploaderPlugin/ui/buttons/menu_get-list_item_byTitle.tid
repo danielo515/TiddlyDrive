@@ -1,0 +1,7 @@
+tags: $:/tags/GAS/GETlist_menuItem
+title: $:/plugins/danielo515/GASuploader/ui/Buttons/Menu/get-list/item/getTitle
+type: text/vnd.tiddlywiki
+
+<$button message="pm-GAS-GET-TiddlerByTitle" class=<<tv-config-toolbar-class>> param={{!!title}}>
+Download by Title
+</$button>

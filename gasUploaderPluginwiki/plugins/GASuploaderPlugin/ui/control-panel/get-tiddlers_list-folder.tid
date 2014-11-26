@@ -1,0 +1,22 @@
+tags: $:/tags/GAS/getTiddlers
+title: $:/plugins/danielo515/GASuploader/ui/contrlol-panel/get-tiddlers/list-folder
+type: text/vnd.tiddlywiki
+
+\define subtiddler-field(field) <tr><th>$field$</th><td><$transclude tiddler=<<server-list>> subtiddler={{!!title}} field="$field$"/></td></tr>
+
+!!List server tiddlers
+Here you can retrieve a list of tiddlers available on the server. You have to specify the sub-folder, otherwhise main folder will be used.
+
+
+
+''Subfolder'': <$edit-text tag="input" default="" placeholder="subfolder" tiddler="$:/temp/GAS/subfolder"/> <$button message="pm-GAS-ListTiddlers" param={{$:/temp/GAS/subfolder}}>LIST</$button>
+
+<table class="server-list-table">
+<$list filter="[title<server-list>plugintiddlers[]sort[title]]">
+<tr><th colspan="2"><$view field="title"/>  <$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/Menu/get-list" mode="inline"/></th></tr>
+<<subtiddler-field "creator">>
+<<subtiddler-field "updated">>
+<<subtiddler-field "id">>
+<<subtiddler-field "permalink">>
+</$list>
+</table>
