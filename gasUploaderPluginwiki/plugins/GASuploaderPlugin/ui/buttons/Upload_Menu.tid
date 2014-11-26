@@ -1,18 +1,17 @@
 created: 20141123121333728
-gas_id: 0B-USg0ow4LCZTUFFLTZlNDc4ZTQ4LTJkZjMtNGY5NC1iNWRjLWI3MWU5ZDg5NDAyOQ
 modified: 20141123184155864
 title: $:/plugins/danielo515/GASuploader/ui/Buttons/Upload/Menu
 type: text/vnd.tiddlywiki
 
 <$list filter="[is[current]has[gas_id]]">
-<$button class=<<tv-config-toolbar-class>> popup=<<qualify "$:/plugins/danielo515/GASuploader/temp/uploadmenu">> >
+<$button class=<<tv-config-toolbar-class>> popup=<<qualify "$:/state/GASuploader/temp/uploadmenu">> >
 <$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploaded" mode="inline"/>
 <$transclude tiddler="$:/plugins/danielo515/GASuploader/ui/Buttons/State/Uploading" mode="inline"/></$button>
 </$list>
 
-<$reveal state=<<qualify "$:/plugins/danielo515/GASuploader/temp/uploadmenu">> type="popup" position="below" animate="yes">
+<$reveal state=<<qualify "$:/state/GASuploader/temp/uploadmenu">> type="popup" position="below" animate="yes">
 <div class="tc-drop-down">
-<$list filter="[tag[$:/tags/GAS/Uploadedmenu]]" variable="menuitem">
+<$list filter="[all[shadows+tiddlers]tag[$:/tags/GAS/Uploadedmenu]]" variable="menuitem">
 <$transclude tiddler=<<menuitem>> mode="inline"/>
 </$list>
 </div>
