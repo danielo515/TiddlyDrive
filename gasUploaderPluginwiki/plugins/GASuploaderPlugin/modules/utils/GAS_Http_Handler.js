@@ -60,10 +60,11 @@ GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
 		}else{
 			self.logger.log("Got respose from server!");
 			self.logger.log(data);
-			var response = JSON.parse(data).response;
+			var response = JSON.parse(data).response; 
+			//response should contain an array of tiddler fields
 			if(response.forEach){
 				response.forEach(function(tiddler){
-					self.setTiddlerID(tiddler.title,tiddler.id);
+					self.updateTiddler(tiddler.title,tiddler);
 				});
 				self.setUploadedState();
 			}
@@ -74,10 +75,10 @@ GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
 
 };
 
-GAS_Http_Handler.prototype.setTiddlerID=function(tiddlerTitle,gas_id){
+GAS_Http_Handler.prototype.updateTiddler=function(tiddlerTitle,newFields){
 	var fields = $tw.wiki.getTiddler(tiddlerTitle).fields;
-	$tw.wiki.addTiddler(new $tw.Tiddler(fields,{"gas_id":gas_id}));
-	this.logger.log("Updated ",tiddlerTitle," with id: ",gas_id);
+	$tw.wiki.addTiddler(new $tw.Tiddler(fields,{"gas_id":newFields.gas_id, "gas_permalink": newFields.permalink}));
+	this.logger.log("Updated ",tiddlerTitle," with id: ",newFields.gas_id);
 }
 
 GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
@@ -156,7 +157,7 @@ GAS_Http_Handler.prototype.getTiddlers = function(descriptionsArray){
 			self.logger.log("Got response from server!");self.logger.log(data);
 			var response = JSON.parse(data).response;
 			if(response){
-				self.importer(config.import_tiddler,response,config.import_manager());
+				self.importer(config.import_tiddler,response,config.import_manager(),true);
 			}
 		}
 	self.removeProcessingState();

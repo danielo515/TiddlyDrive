@@ -7,7 +7,7 @@ module-type: library
 
 \*/
 
-exports.GAS_importer  = function(IMPORT_TITLE,tiddlers,raise_importer)
+exports.GAS_importer  = function(IMPORT_TITLE,tiddlers,raise_importer,navigate)
 {
 	
 if(raise_importer){
@@ -35,6 +35,9 @@ if(raise_importer){
 	// Save the $:/Import tiddler
 	newFields.text = JSON.stringify(importData,null,$tw.config.preferences.jsonSpaces);
 	$tw.wiki.addTiddler(new $tw.Tiddler(importTiddler,newFields));
+	if(navigate){
+		addToStory(IMPORT_TITLE);
+	}
 	// Update the story and history details
 } else {
 	tiddlers.forEach(function(fields){
@@ -42,4 +45,32 @@ if(raise_importer){
 	});
 }
 	return "saved";
+
+function addToStory (title,fromTitle) {
+	var storyList = $tw.wiki.getTiddlerList("$:/StoryList")
+	if(storyList) {
+		// See if the tiddler is already there
+		var slot = storyList.indexOf(title);
+		// If not we need to add it
+		if(slot === -1) {
+			// First we try to find the position of the story element we navigated from
+			slot = storyList.indexOf(fromTitle) + 1;
+			// Add the tiddler
+			storyList.splice(slot,0,title);
+			// Save the story
+			saveStoryList(storyList);
+			$tw.wiki.addToHistory(title);
+		}
+	}
+};
+
+function saveStoryList (storyList) {
+	var storyTiddler = $tw.wiki.getTiddler("$:/StoryList");
+	$tw.wiki.addTiddler(new $tw.Tiddler(
+		storyTiddler,
+		{list: storyList}
+	));
+};
+
+
 };
