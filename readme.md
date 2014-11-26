@@ -1,0 +1,2 @@
+<h1 class=''><a class='tc-tiddlylink tc-tiddlylink-resolves' href='#HelloThere'>HelloThere</a></h1><p>This is a plugin for TiddlyWiki (<a class='tc-tiddlylink-external' href='http://tiddlywiki.com' target='_blank'>http://tiddlywiki.com</a>).</p><p>It sends tiddlers to a google apps script (GAS) that acts as a server. The plugin and the script are designed to work toghether. Sadly the script only accepts CORS petitions if it is publicly available.
+</p>
