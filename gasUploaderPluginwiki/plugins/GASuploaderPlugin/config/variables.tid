@@ -1,0 +1,7 @@
+title: $:/plugins/danielo515/GASuploader/config/variables
+type: text/vnd.tiddlywiki
+tags: $:/tags/Macro
+
+\define server-list() $:/temp/GAS/list_from_server
+\define list-to-import() $:/Import
+\define tag-menu-server-list() $:/tags/GAS/GETlist_menuItem
