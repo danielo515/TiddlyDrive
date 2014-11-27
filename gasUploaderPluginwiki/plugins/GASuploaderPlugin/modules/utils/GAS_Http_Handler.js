@@ -201,8 +201,9 @@ GAS_Http_Handler.prototype.getSubfolderOption= function(foldername){
 };
 
 GAS_Http_Handler.prototype.getSubfolder = function (){
-	var subfolder = this.wiki.getTiddlerText(GAS_SUBFOLDER).trim();
-	return subfolder;
+	var subfolder = this.wiki.getTiddlerText(GAS_SUBFOLDER);
+
+	return subfolder? subfolder.trim() : undefined;//undefined better than empty string
 };
 
 exports.GAS_Http_Handler = GAS_Http_Handler;
