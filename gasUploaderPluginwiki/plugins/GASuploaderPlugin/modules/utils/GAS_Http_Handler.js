@@ -27,6 +27,46 @@ var GAS_Http_Handler = function(wiki) {
 };
 
 
+GAS_Http_Handler.prototype.genericCallback = function(callback){
+	self = this;
+	return function(err,data){
+		if(err){
+			self.logger.log(config.server_communication_error,err);
+			self.displayNotification(config.server_communication_error,err,"");
+		}else{
+			callback(data);
+		}
+	};
+};
+
+
+GAS_Http_Handler.prototype.setProcessingState = function(action){
+	this.logger.log("Posting tiddler ",this.tiddlerBeingProcessed);
+	this.setState(STATE_UPLOADING,this.tiddlerBeingProcessed);
+	this.displayNotification(action,this.tiddlerBeingProcessed);
+};
+
+GAS_Http_Handler.prototype.setUploadedState = function(){
+	this.wiki.addTiddler( new $tw.Tiddler({"title":STATE_UPLOADED,"text":this.uploadingTiddler}));
+	$tw.notifier.display("$:/plugins/danielo515/GASuploader/language/Notifications/Saved/Tiddler");
+};
+
+GAS_Http_Handler.prototype.removeProcessingState = function(){
+	this.wiki.addTiddler( new $tw.Tiddler({"title":STATE_UPLOADING,"text":""}));
+	this.tiddlerBeingProcessed = "";
+};
+
+GAS_Http_Handler.prototype.setState = function(stateTiddler,tiddlerBeingProcessed){
+	this.wiki.addTiddler( new $tw.Tiddler({"title":stateTiddler,"text":tiddlerBeingProcessed}));
+};
+
+GAS_Http_Handler.prototype.displayNotification = function(action,text,prefix){
+	var message = [prefix || "Starting to",action,text].join(" "),
+	notificationTiddler="$:/state/GAS/Processing";
+	this.wiki.addTiddler( new $tw.Tiddler({"title":notificationTiddler,"text":message}));
+	$tw.notifier.display(notificationTiddler);
+};
+
 GAS_Http_Handler.prototype.postTiddlers = function(tiddlersFilter){
  	if(tiddlersFilter === "") { return }
 	var tiddlersList=$tw.wiki.filterTiddlers(tiddlersFilter),self=this,
@@ -87,34 +127,6 @@ GAS_Http_Handler.prototype.postTiddler = function(tiddlerName){
 
 };
 
-
-GAS_Http_Handler.prototype.setProcessingState = function(action){
-	this.logger.log("Posting tiddler ",this.tiddlerBeingProcessed);
-	this.setState(STATE_UPLOADING,this.tiddlerBeingProcessed);
-	this.displayNotification(action,this.tiddlerBeingProcessed);
-};
-
-GAS_Http_Handler.prototype.setUploadedState = function(){
-	this.wiki.addTiddler( new $tw.Tiddler({"title":STATE_UPLOADED,"text":this.uploadingTiddler}));
-	$tw.notifier.display("$:/plugins/danielo515/GASuploader/language/Notifications/Saved/Tiddler");
-};
-
-GAS_Http_Handler.prototype.removeProcessingState = function(){
-	this.wiki.addTiddler( new $tw.Tiddler({"title":STATE_UPLOADING,"text":""}));
-	this.tiddlerBeingProcessed = "";
-};
-
-GAS_Http_Handler.prototype.setState = function(stateTiddler,tiddlerBeingProcessed){
-	this.wiki.addTiddler( new $tw.Tiddler({"title":stateTiddler,"text":tiddlerBeingProcessed}));
-};
-
-GAS_Http_Handler.prototype.displayNotification = function(action,text,prefix){
-	var message = [prefix || "Starting to",action,text].join(" "),
-	notificationTiddler="$:/state/GAS/Processing";
-	this.wiki.addTiddler( new $tw.Tiddler({"title":notificationTiddler,"text":message}));
-	$tw.notifier.display(notificationTiddler);
-};
-
 GAS_Http_Handler.prototype.listTiddlers = function(folder){
 	var self = this;
 
@@ -138,6 +150,18 @@ GAS_Http_Handler.prototype.listTiddlers = function(folder){
 	}
 };
 
+GAS_Http_Handler.prototype.listAllTiddlersExcept = function(titlesArray,callback){
+	var self = this;
+
+	this.displayNotification("fetch","new tiddlers from server");
+
+	$tw.utils.httpRequest({
+		url: this.getURL("listTiddlers"),
+		type: "POST",
+		data: JSON.stringify(titlesArray),
+		callback: self.genericCallback(callback)
+	});
+};
 
 GAS_Http_Handler.prototype.getTiddlers = function(descriptionsArray){
 	var self = this;
