@@ -1,7 +1,7 @@
 {
 	"plugins": [
           "tiddlywiki/filesystem",
-          "tiddlywiki/tiddlyweb",
+		  "tiddlywiki/tiddlyweb",
           "tiddlywiki/codemirror",
           "tiddlywiki/highlight"
 	],
