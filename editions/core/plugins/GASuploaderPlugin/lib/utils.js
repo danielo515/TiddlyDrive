@@ -37,6 +37,11 @@ configs.import_manager = function (){
 	return use_importer ? use_importer.toLowerCase() === "yes" : false;
 };
 
+configs.downloadOnStartup = function(){
+	var downloadonstartup = $tw.wiki.getTiddlerText("$:/plugins/danielo515/GASuploader/config/downloadOnStartup");
+	return downloadonstartup ? downloadonstartup.toLowerCase() === "yes" : false;
+};
+
 return { "getURL": getURL, "config":configs};
 
 };

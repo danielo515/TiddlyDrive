@@ -17,6 +17,9 @@ exports.platforms = ["browser"];
 exports.after = ["startup"];
 exports.synchronous = true;
 
+var utils = require("$:/plugins/danielo515/GASuploader/lib/utils.js").utils,
+   config = utils.config;
+
 function addNewServertiddlers(jsonTiddlersArr){
 	var tiddlers=JSON.parse(jsonTiddlersArr).response;
 	if(tiddlers[0].ERROR){
@@ -49,7 +52,9 @@ exports.startup = function() {
 		$tw.GAS_Http_Handler.listTiddlers(event.param);
 	});
 
-	$tw.GAS_Http_Handler.listAllTiddlersExcept($tw.wiki.filterTiddlers("[!is[system]]"),addNewServertiddlers);
+	if(config.downloadOnStartup()){
+		$tw.GAS_Http_Handler.listAllTiddlersExcept($tw.wiki.filterTiddlers("[!is[system]]"),addNewServertiddlers);
+	}
 };
 
 
