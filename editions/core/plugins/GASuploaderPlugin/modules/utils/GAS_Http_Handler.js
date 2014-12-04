@@ -144,7 +144,7 @@ GAS_Http_Handler.prototype.listTiddlers = function(folder){
 			this.displayNotification(config.server_communication_error,err,"");
 		}else{
 			self.logger.log("List retrieved from server: ",data);
-			self.importer(config.server_list,JSON.parse(data).response,true);
+			self.importer.toPluginTiddler(JSON.parse(data).response,config.server_list);
 			self.displayNotification(config.folder_listed,folder,"");
 		}
 	}
@@ -181,7 +181,11 @@ GAS_Http_Handler.prototype.getTiddlers = function(descriptionsArray){
 			self.logger.log("Got response from server!");self.logger.log(data);
 			var response = JSON.parse(data).response;
 			if(response){
-				self.importer(config.import_tiddler,response,config.import_manager(),true);
+				if(config.import_manager()){
+					self.importer.interactive(config.import_tiddler,response,true);
+				}else{
+					self.importer.silently(response);
+				}
 			}
 		}
 	self.removeProcessingState();

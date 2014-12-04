@@ -28,10 +28,10 @@ function addNewServertiddlers(jsonTiddlersArr){
 	}
 	
 	tiddlers.forEach(function(tiddler){
-		tiddler.text =" This tiddler is on the server "; 
+		tiddler.text =" This tiddler is on the server "; //use a template here
 	});
 	var importer = require("$:/plugins/danielo515/GASuploader/lib/tiddlerImporter.js").GAS_importer;
-	importer("$:/temp/GASuploader/Servertiddlers",tiddlers,false);
+	importer.toPluginTiddler(tiddlers,"$:/temp/GASuploader/Servertiddlers");
 };
 
 exports.startup = function() {
